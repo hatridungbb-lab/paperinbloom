@@ -19,7 +19,6 @@
             --primary-rose: #ee637f;
             --mint-dark: #3a8b7d;
             --text-dark: #374151;
-            --soldout-color: #9ca3af;
             --paper-edge: #fffaf5;
         }
 
@@ -48,7 +47,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* ================= HIỆU ỨNG TRANG TRÍ GIẤY XÉ & MÂY HOA VĂN ================= */
+        /* ================= HIỆU ỨNG TRANG TRÍ GIẤY XÉ ================= */
         .decor-scrap {
             position: fixed;
             pointer-events: none;
@@ -57,7 +56,6 @@
             filter: drop-shadow(2px 5px 12px rgba(0, 0, 0, 0.06));
         }
 
-        /* Mảnh giấy xé góc 1 */
         .scrap-1 {
             top: 5%;
             left: -15px;
@@ -68,7 +66,6 @@
             clip-path: polygon(0% 5%, 15% 0%, 35% 6%, 60% 1%, 85% 7%, 100% 2%, 96% 92%, 80% 98%, 55% 90%, 30% 100%, 10% 92%, 0% 97%);
             border-left: 5px solid #bcece1;
         }
-        /* Mảnh giấy xé góc 2 */
         .scrap-2 {
             top: 35%;
             right: -25px;
@@ -79,7 +76,6 @@
             clip-path: polygon(5% 0%, 25% 6%, 50% 2%, 80% 8%, 100% 0%, 98% 95%, 75% 88%, 50% 97%, 20% 91%, 0% 100%);
             border-right: 5px solid #ffcad8;
         }
-        /* Mảnh giấy xé góc 3 */
         .scrap-3 {
             bottom: 12%;
             left: 2%;
@@ -90,7 +86,6 @@
             clip-path: polygon(0 4%, 20% 0, 45% 6%, 70% 1%, 95% 5%, 100% 94%, 75% 100%, 50% 92%, 25% 98%, 0 92%);
         }
 
-        /* Băng dán Washi tape giả lập trên các mảnh giấy */
         .washi-tape {
             position: absolute;
             width: 80px;
@@ -106,7 +101,7 @@
             position: relative;
             z-index: 2;
             width: 100%;
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 25px 18px 70px;
         }
@@ -249,7 +244,7 @@
             font-size: 1.55rem;
             color: #1e3a5f;
             margin-bottom: 12px;
-            display: center;
+            display: flex;
             align-items: center;
             gap: 10px;
         }
@@ -282,20 +277,15 @@
             margin-bottom: 6px;
         }
 
-        /* Grid hiển thị sản phẩm */
+        /* Grid hiển thị 4 sản phẩm theo tỷ lệ 2x2 cân đối */
         .product-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 26px;
+            gap: 28px;
         }
-        @media (min-width: 650px) {
+        @media (min-width: 768px) {
             .product-grid {
                 grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        @media (min-width: 1024px) {
-            .product-grid {
-                grid-template-columns: repeat(3, 1fr);
             }
         }
 
@@ -319,7 +309,7 @@
         .img-wrap {
             position: relative;
             width: 100%;
-            height: 290px;
+            height: 300px;
             overflow: hidden;
             background: #fdfaf6;
         }
@@ -349,13 +339,13 @@
         }
 
         .card-details {
-            padding: 22px;
+            padding: 24px;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
         }
         .card-details h3 {
-            font-size: 1.35rem;
+            font-size: 1.4rem;
             color: #1f2937;
             margin-bottom: 6px;
         }
@@ -367,10 +357,11 @@
             font-weight: 600;
         }
         .product-desc {
-            font-size: 0.88rem;
+            font-size: 0.9rem;
             color: #6b7280;
-            line-height: 1.5;
+            line-height: 1.6;
             margin-bottom: 16px;
+            flex-grow: 1;
         }
 
         /* Phụ kiện đính kèm */
@@ -378,10 +369,10 @@
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
         .decor-tag {
-            font-size: 0.74rem;
+            font-size: 0.75rem;
             font-weight: 600;
             background: #f0fdf9;
             color: #115e59;
@@ -393,36 +384,15 @@
             gap: 4px;
         }
 
-        /* Thanh trạng thái 6 đơn */
-        .order-status {
-            margin-top: auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.83rem;
-            font-weight: 600;
-            color: #4b5563;
-            margin-bottom: 12px;
-            padding-top: 8px;
-            border-top: 1px dashed #f1f5f9;
-        }
-        .status-badge {
-            color: #e11d48;
-            background: #ffe4e6;
-            padding: 3px 8px;
-            border-radius: 8px;
-            font-size: 0.78rem;
-        }
-
         .btn-buy {
             width: 100%;
             background: linear-gradient(135deg, #fba1b7 0%, #ee637f 100%);
             color: #fff;
             border: none;
-            padding: 12px;
+            padding: 13px;
             border-radius: 14px;
             font-weight: 700;
-            font-size: 0.95rem;
+            font-size: 0.98rem;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(238, 99, 127, 0.28);
             display: flex;
@@ -433,37 +403,6 @@
         }
         .btn-buy:active {
             transform: scale(0.98);
-        }
-
-        /* Trạng thái SOLD OUT */
-        .product-item.is-sold-out {
-            filter: grayscale(0.85);
-            opacity: 0.85;
-        }
-        .product-item.is-sold-out .btn-buy {
-            background: var(--soldout-color) !important;
-            box-shadow: none !important;
-            cursor: not-allowed;
-        }
-        .soldout-overlay-badge {
-            display: none;
-            position: absolute;
-            top: 14px;
-            left: 14px;
-            background: #dc2626;
-            color: white;
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-weight: 800;
-            font-size: 0.85rem;
-            padding: 6px 14px;
-            border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
-            z-index: 5;
-            letter-spacing: 1px;
-        }
-        .product-item.is-sold-out .soldout-overlay-badge {
-            display: block;
         }
 
         /* Modal Đặt Mua */
@@ -560,15 +499,6 @@
             font-size: 0.88rem;
             color: #64748b;
         }
-        .reset-btn {
-            background: none;
-            border: none;
-            text-decoration: underline;
-            color: #94a3b8;
-            cursor: pointer;
-            font-size: 0.75rem;
-            margin-top: 12px;
-        }
     </style>
 </head>
 <body>
@@ -601,7 +531,7 @@
         <!-- Thời gian mở bán -->
         <div class="time-banner">
             <h2>Thời Gian Nhận Đặt Thiệp</h2>
-            <p style="font-size: 0.92rem; color: #4b5563;">Mỗi tấm thiệp đều được gấp cắt tỉ mỉ bằng tay, tụi mình chỉ mở cổng nhận đơn số lượng giới hạn:</p>
+            <p style="font-size: 0.92rem; color: #4b5563;">Mỗi tấm thiệp đều được gấp cắt tỉ mỉ bằng tay trao trọn tâm ý:</p>
             <div class="time-box-container">
                 <div class="time-box">
                     <span>Mở bán từ ngày</span>
@@ -610,7 +540,7 @@
                 <i class="fa-solid fa-arrow-right-long" style="color: #ee637f; font-size: 1.3rem;"></i>
                 <div class="time-box">
                     <span>Đóng cổng vào ngày</span>
-                    <strong>12 / 11</strong>
+                    <strong>15 / 11</strong>
                 </div>
             </div>
         </div>
@@ -644,14 +574,14 @@
             </section>
         </div>
 
-        <!-- Danh sách 5 Mẫu Thiệp -->
+        <!-- Danh sách 4 Mẫu Thiệp -->
         <div class="products-section-title">
-            <h2>Bộ Sưu Tập 5 Mẫu Thiệp Tri Ân</h2>
-            <p style="color: #6b7280; font-size: 0.95rem;">Đồng giá <strong>29.000 VNĐ</strong> • Giới hạn đúng <strong>6 suất</strong> mỗi mẫu để đảm bảo độ nắn nót hoàn mỹ nhất</p>
+            <h2>Bộ Sưu Tập 4 Mẫu Thiệp Tri Ân</h2>
+            <p style="color: #6b7280; font-size: 0.95rem;">Trao gửi lời tri ân ngọt ngào và đong đầy ý nghĩa đến Thầy Cô</p>
         </div>
 
         <div class="product-grid" id="productGrid">
-            <!-- 5 Mẫu sản phẩm được JavaScript render -->
+            <!-- 4 Mẫu sản phẩm được JavaScript render -->
         </div>
 
         <footer>
@@ -683,7 +613,7 @@
                 <div class="modal-actions">
                     <button type="button" class="btn-cancel" onclick="closeModal()">Hủy</button>
                     <button type="submit" id="btnSubmitForm" class="btn-confirm">
-                        <span>Hoàn Tất Đặt Hàng (29.000đ)</span>
+                        <span id="btnSubmitText">Hoàn Tất Đặt Hàng</span>
                     </button>
                 </div>
             </form>
@@ -691,18 +621,17 @@
     </div>
 
 <script>
-        // Email nhận thông tin đơn hàng của bạn (dùng cho phương án dự phòng mailto)
         const DEST_EMAIL = "hatridung.bb@gmail.com";
-
-        // DÁN URL "Web app" của Google Apps Script vào đây (xem hướng dẫn)
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxyMeU0NVdvUJ2UlxMtYTp0H_yqKEKr2NZ0Ty6ZG6hQGgPp63q5Ysxn_VNvEu4WXEm-/exec";
 
+        // Bộ 4 mẫu thiệp được tối ưu giá & nội dung
         const products = [
             {
                 id: 1,
                 name: "Sắc Hoa Tri Ân",
                 quote: "“Gửi yêu thương qua từng cánh hoa”",
-                price: "29.000 VNĐ",
+                price: "25.000 VNĐ",
+                priceNum: "25k",
                 desc: "Thiết kế thiệp pop-up 3D mở bung giỏ hoa cẩm chướng hồng thắm kèm nơ xanh mint tinh xảo, mang lại cảm xúc bất ngờ và rạng rỡ khi mở ra.",
                 img: "https://i.pinimg.com/736x/94/7e/86/947e86f96e059f70ee223b57c02cdd1b.jpg",
                 tags: ["Pop-up 3D thủ công", "Giỏ hoa cẩm chướng", "Nơ lụa thắt tay pastel"]
@@ -711,7 +640,8 @@
                 id: 2,
                 name: "Sắc Hoa Người Đưa Đò",
                 quote: "“Một góc nhỏ lưu giữ ngàn lời thương”",
-                price: "29.000 VNĐ",
+                price: "12.000 VNĐ",
+                priceNum: "12k",
                 desc: "Dạng thiệp gập ziczac kéo dài độc đáo, từng nếp gấp mở ra những đóa hoa rực rỡ sắc màu kèm khoảng trống trang trọng để ghi lại lời chúc.",
                 img: "https://i.pinimg.com/736x/de/8d/2b/de8d2bb582709065ffeea6bba31a0e13.jpg",
                 tags: ["Gấp ziczac sáng tạo", "Hoa vẽ tay màu nước", "Không gian viết lời chúc rộng"]
@@ -720,7 +650,8 @@
                 id: 3,
                 name: "Nhành Hoa Phấn Trắng",
                 quote: "“Một món quà nhỏ, một tấm lòng lớn”",
-                price: "29.000 VNĐ",
+                price: "12.000 VNĐ",
+                priceNum: "12k",
                 desc: "Thiết kế bó hoa ốc quế cầm tay mini xinh xắn, bên trong là thiệp gấp có dòng kẻ ngay ngắn để bạn tự tay nắn nót nét chữ tặng thầy cô.",
                 img: "https://i.pinimg.com/736x/76/82/64/7682640ea929e01b38b9478705c9706a.jpg",
                 tags: ["Bó hoa ốc quế mini", "Giấy kẻ dòng thư pháp", "Dây ruy băng ánh kim"]
@@ -729,57 +660,23 @@
                 id: 4,
                 name: "Trang Sách Ơn Người",
                 quote: "“Nơi những bài học kết thành đóa hoa tri ân”",
-                price: "29.000 VNĐ",
+                price: "25.000 VNĐ",
+                priceNum: "25k",
                 desc: "Bó hoa đa sắc bung tỏa sống động giữa hai cánh thiệp với hình ảnh chú bướm vàng và bọ rùa nhỏ, gợi nhắc những tháng ngày rèn đức luyện tài ấm áp.",
                 img: "https://i.pinimg.com/736x/1d/9c/8a/1d9c8ab4cf7311d9f8590fd4d00f2bca.jpg",
                 tags: ["Hoa vẽ minh họa chi tiết", "Thiệp gập 2 cánh đứng", "Họa tiết thiên nhiên sinh động"]
-            },
-            {
-                id: 5,
-                name: "Lưu Bút Ân Tình",
-                quote: "“Lưu giữ lời cảm ơn, gửi trao tình cảm chân thành”",
-                price: "29.000 VNĐ",
-                desc: "Phong cách tối giản trang nhã với bó hoa giấy 3D gắn ngọc trai nhân tạo và nơ voan xanh ô-liu, thích hợp trao gửi tấm lòng trang trọng nhất.",
-                img: "https://i.pinimg.com/1200x/55/58/69/5558690bbc7aea10164d873064474eac.jpg",
-                tags: ["Đính ngọc trai thủ công", "Giấy mỹ thuật hạt sần", "Nơ voan xanh ô-liu nhã nhặn"]
             }
         ];
 
-        const MAX_ORDERS = 6; 
-
-        // Số lượng đơn đã đặt: lấy từ Google Sheets (chung cho mọi khách)
-        let serverCounts = { 1: 4, 2: 5, 3: 6, 4: 3, 5: 2 }; // giá trị tạm khi chưa tải được
-
-        function getOrdersData() {
-            return serverCounts;
-        }
-
-        async function loadCounts() {
-            try {
-                const res = await fetch(APPS_SCRIPT_URL);
-                const data = await res.json();
-                if (data && data.counts) serverCounts = data.counts;
-            } catch (err) {
-                console.warn("Chưa tải được số lượng đơn từ Google Sheets:", err);
-            }
-            renderProducts();
-        }
-
-        // Hiển thị danh sách 5 mẫu sản phẩm
+        // Hiển thị danh sách 4 mẫu sản phẩm theo bố cục hài hòa
         function renderProducts() {
-            const orders = getOrdersData();
             const grid = document.getElementById('productGrid');
             grid.innerHTML = '';
 
             products.forEach(p => {
-                const count = orders[p.id] || 0;
-                const isSoldOut = count >= MAX_ORDERS;
-                const remaining = Math.max(0, MAX_ORDERS - count);
-
                 const card = document.createElement('div');
-                card.className = `product-item ${isSoldOut ? 'is-sold-out' : ''}`;
+                card.className = 'product-item';
                 card.innerHTML = `
-                    <span class="soldout-overlay-badge">SOLD OUT (HẾT HÀNG)</span>
                     <div class="img-wrap">
                         <img src="${p.img}" alt="${p.name}" onerror="this.src='https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=700&q=80'">
                         <span class="price-tag">${p.price}</span>
@@ -793,14 +690,9 @@
                             ${p.tags.map(tag => `<span class="decor-tag"><i class="fa-solid fa-sparkles"></i> ${tag}</span>`).join('')}
                         </div>
 
-                        <div class="order-status">
-                            <span>Đã hoàn thành: <strong>${count}/${MAX_ORDERS}</strong> cái</span>
-                            <span class="status-badge">${isSoldOut ? 'Đã hết hàng' : `Còn lại: ${remaining} suất`}</span>
-                        </div>
-
-                        <button class="btn-buy" ${isSoldOut ? 'disabled' : ''} onclick="openModal(${p.id})">
-                            <i class="fa-solid ${isSoldOut ? 'fa-ban' : 'fa-cart-shopping'}"></i>
-                            ${isSoldOut ? 'Đã Hết Hàng (Sold Out)' : 'Đặt Mua Mẫu Này (29k)'}
+                        <button class="btn-buy" onclick="openModal(${p.id})">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            Đặt Mua Mẫu Này (${p.priceNum})
                         </button>
                     </div>
                 `;
@@ -810,15 +702,10 @@
 
         // Mở popup đặt hàng
         function openModal(prodId) {
-            const orders = getOrdersData();
-            if ((orders[prodId] || 0) >= MAX_ORDERS) {
-                alert('Mẫu thiệp này đã đạt mốc giới hạn 6 cái và hiện đã SOLD OUT!');
-                return;
-            }
-
             const p = products.find(item => item.id === prodId);
             document.getElementById('currentProdId').value = p.id;
-            document.getElementById('modalProductName').innerHTML = `Đặt Mẫu: <i>${p.name}</i>`;
+            document.getElementById('modalProductName').innerHTML = `Đặt Mẫu ${p.id}: <i>${p.name}</i>`;
+            document.getElementById('btnSubmitText').innerText = `Hoàn Tất Đặt Hàng (${p.price})`;
             document.getElementById('orderModal').style.display = 'flex';
         }
 
@@ -828,7 +715,7 @@
             document.getElementById('orderForm').reset();
         }
 
-        // XỬ LÝ GỬI ĐƠN HÀNG (Google Apps Script -> Google Sheets + Gmail)
+        // XỬ LÝ GỬI ĐƠN HÀNG
         async function submitOrder(e) {
             e.preventDefault();
             const prodId = document.getElementById('currentProdId').value;
@@ -846,7 +733,6 @@
             const noteText = note || "(Khách tự viết, không yêu cầu)";
 
             try {
-                // Không đặt header Content-Type để trình duyệt không gửi preflight (tránh lỗi CORS)
                 const response = await fetch(APPS_SCRIPT_URL, {
                     method: "POST",
                     body: JSON.stringify({
@@ -861,23 +747,13 @@
                 });
                 const result = await response.json();
 
-                if (result.counts) serverCounts = result.counts;
-
-                if (result.soldOut) {
-                    alert('Rất tiếc, mẫu thiệp này vừa hết 6 suất cuối cùng!');
-                    closeModal();
-                    renderProducts();
-                    return;
-                }
                 if (!result.success) throw new Error(result.error || "Server báo lỗi");
 
                 alert(`🎉 Đặt hàng thành công!\n\nCảm ơn bạn ${name}, đơn hàng đã được gửi tới Xưởng Giấy Mơ. Tụi mình sẽ sớm liên hệ qua Zalo (${phone}) để xác nhận nhé!`);
                 closeModal();
-                renderProducts();
             } catch (error) {
                 console.error("Lỗi gửi đơn:", error);
 
-                // Phương án dự phòng: mở app email của khách với nội dung đơn điền sẵn
                 const useMail = confirm(
                     "Chưa gửi được đơn tự động (mạng chập chờn hoặc hệ thống gặp sự cố).\n\n" +
                     "Bấm OK để gửi đơn qua ứng dụng email của bạn, hoặc Hủy rồi nhắn trực tiếp qua Zalo nhé!"
@@ -899,7 +775,7 @@
             }
         }
 
-        // Đóng modal khi bấm ra vùng nền mờ
+        // Đóng modal khi bấm ra vùng ngoài
         window.onclick = function(event) {
             const modal = document.getElementById('orderModal');
             if (event.target === modal) {
@@ -907,7 +783,9 @@
             }
         };
 
-        document.addEventListener('DOMContentLoaded', () => { renderProducts(); loadCounts(); });
+        document.addEventListener('DOMContentLoaded', () => { 
+            renderProducts(); 
+        });
     </script>
 </body>
 </html>
