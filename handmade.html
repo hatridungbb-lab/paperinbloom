@@ -848,23 +848,22 @@
 
             try {
                 // Gửi đơn tới hatridung.bb@gmail.com qua FormSubmit
+                // Dùng FormData (không cần preflight) để tránh lỗi CORS trên GitHub Pages
+                const fd = new FormData();
+                fd.append("_captcha", "false");
+                fd.append("_template", "table");
+                fd.append("_subject", `💌 [ĐƠN HÀNG THIỆP MỚI] - ${name} (${p.name})`);
+                fd.append("Mẫu thiệp đã chọn", `Mẫu ${p.id}: ${p.name}`);
+                fd.append("Đơn giá", p.price);
+                fd.append("Họ và tên khách", name);
+                fd.append("Số điện thoại / Zalo", phone);
+                fd.append("Lời chúc viết tay", noteText);
+                fd.append("Thời gian đặt hàng", orderTime);
+
                 const response = await fetch(`https://formsubmit.co/ajax/${DEST_EMAIL}`, {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    },
-                    body: JSON.stringify({
-                        _captcha: "false",
-                        _template: "table",
-                        _subject: `💌 [ĐƠN HÀNG THIỆP MỚI] - ${name} (${p.name})`,
-                        "Mẫu thiệp đã chọn": `Mẫu ${p.id}: ${p.name}`,
-                        "Đơn giá": p.price,
-                        "Họ và tên khách": name,
-                        "Số điện thoại / Zalo": phone,
-                        "Lời chúc viết tay": noteText,
-                        "Thời gian đặt hàng": orderTime
-                    })
+                    headers: { "Accept": "application/json" },
+                    body: fd
                 });
 
                 const result = await response.json();
