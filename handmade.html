@@ -860,17 +860,15 @@
                 fd.append("Lời chúc viết tay", noteText);
                 fd.append("Thời gian đặt hàng", orderTime);
 
-                const response = await fetch(`https://formsubmit.co/ajax/${DEST_EMAIL}`, {
+                // mode "no-cors": gửi đi được nhưng không đọc được phản hồi (tránh lỗi CORS).
+                // Nếu mạng hỏng thì fetch vẫn báo lỗi và sẽ nhảy xuống phần catch.
+                await fetch(`https://formsubmit.co/${DEST_EMAIL}`, {
                     method: "POST",
-                    headers: { "Accept": "application/json" },
+                    mode: "no-cors",
                     body: fd
                 });
 
-                const result = await response.json();
-                const ok = response.ok && (result.success === "true" || result.success === true);
-                if (!ok) throw new Error(result.message || "FormSubmit trả về lỗi");
-
-                // Chỉ tăng số lượng khi email đã gửi thành công
+                // Tăng số lượng sau khi đã gửi đơn đi
                 orders[prodId] = currentCount + 1;
                 localStorage.setItem('orders_xuonggiaymo_2026', JSON.stringify(orders));
 
