@@ -656,7 +656,6 @@
 
         <footer>
             <p>© 2026 Xưởng Giấy Mơ - paper.in.bloom. Tất cả tình yêu dành tặng Thầy Cô.</p>
-            <button class="reset-btn" onclick="resetDemoOrders()"><i class="fa-solid fa-arrows-rotate"></i> Reset lại số lượng 6 đơn (Dành cho việc kiểm tra code)</button>
         </footer>
     </div>
 
@@ -692,8 +691,11 @@
     </div>
 
 <script>
-        // Email nhận thông tin đơn hàng của bạn
-        const DEST_EMAIL = "hatridung.bb@gmail.com"; 
+        // Email nhận thông tin đơn hàng của bạn (dùng cho phương án dự phòng mailto)
+        const DEST_EMAIL = "hatridung.bb@gmail.com";
+
+        // DÁN URL "Web app" của Google Apps Script vào đây (xem hướng dẫn)
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0AgEtBTcPcAoKsXYlk9mFzsOIrTnagVC5IewhBqJwToXIxtWNMM6YIRIH_WDtlk8A/exec";
 
         const products = [
             {
@@ -745,15 +747,22 @@
 
         const MAX_ORDERS = 6; 
 
-        // Lấy số lượng đơn đã đặt từ LocalStorage
+        // Số lượng đơn đã đặt: lấy từ Google Sheets (chung cho mọi khách)
+        let serverCounts = { 1: 4, 2: 5, 3: 6, 4: 3, 5: 2 }; // giá trị tạm khi chưa tải được
+
         function getOrdersData() {
-            const data = localStorage.getItem('orders_xuonggiaymo_2026');
-            if (data) {
-                return JSON.parse(data);
+            return serverCounts;
+        }
+
+        async function loadCounts() {
+            try {
+                const res = await fetch(APPS_SCRIPT_URL);
+                const data = await res.json();
+                if (data && data.counts) serverCounts = data.counts;
+            } catch (err) {
+                console.warn("Chưa tải được số lượng đơn từ Google Sheets:", err);
             }
-            const initialOrders = { 1: 4, 2: 5, 3: 6, 4: 3, 5: 2 };
-            localStorage.setItem('orders_xuonggiaymo_2026', JSON.stringify(initialOrders));
-            return initialOrders;
+            renderProducts();
         }
 
         // Hiển thị danh sách 5 mẫu sản phẩm
@@ -819,7 +828,7 @@
             document.getElementById('orderForm').reset();
         }
 
-        // XỬ LÝ GỬI ĐƠN HÀNG VỀ GMAIL TỰ ĐỘNG
+        // XỬ LÝ GỬI ĐƠN HÀNG (Google Apps Script -> Google Sheets + Gmail)
         async function submitOrder(e) {
             e.preventDefault();
             const prodId = document.getElementById('currentProdId').value;
@@ -827,16 +836,6 @@
             const phone = document.getElementById('buyerPhone').value.trim();
             const note = document.getElementById('buyerNote').value.trim();
             const p = products.find(item => item.id == prodId);
-
-            const orders = getOrdersData();
-            let currentCount = orders[prodId] || 0;
-
-            if (currentCount >= MAX_ORDERS) {
-                alert('Rất tiếc, sản phẩm này vừa hết 6 suất cuối cùng!');
-                closeModal();
-                renderProducts();
-                return;
-            }
 
             const submitBtn = document.getElementById('btnSubmitForm');
             const originalBtnHtml = submitBtn.innerHTML;
@@ -847,40 +846,40 @@
             const noteText = note || "(Khách tự viết, không yêu cầu)";
 
             try {
-                // Gửi đơn tới hatridung.bb@gmail.com qua FormSubmit
-                // Dùng FormData (không cần preflight) để tránh lỗi CORS trên GitHub Pages
-                const fd = new FormData();
-                fd.append("_captcha", "false");
-                fd.append("_template", "table");
-                fd.append("_subject", `💌 [ĐƠN HÀNG THIỆP MỚI] - ${name} (${p.name})`);
-                fd.append("Mẫu thiệp đã chọn", `Mẫu ${p.id}: ${p.name}`);
-                fd.append("Đơn giá", p.price);
-                fd.append("Họ và tên khách", name);
-                fd.append("Số điện thoại / Zalo", phone);
-                fd.append("Lời chúc viết tay", noteText);
-                fd.append("Thời gian đặt hàng", orderTime);
-
-                // mode "no-cors": gửi đi được nhưng không đọc được phản hồi (tránh lỗi CORS).
-                // Nếu mạng hỏng thì fetch vẫn báo lỗi và sẽ nhảy xuống phần catch.
-                await fetch(`https://formsubmit.co/${DEST_EMAIL}`, {
+                // Không đặt header Content-Type để trình duyệt không gửi preflight (tránh lỗi CORS)
+                const response = await fetch(APPS_SCRIPT_URL, {
                     method: "POST",
-                    mode: "no-cors",
-                    body: fd
+                    body: JSON.stringify({
+                        prodId: p.id,
+                        prodName: p.name,
+                        price: p.price,
+                        name: name,
+                        phone: phone,
+                        note: noteText,
+                        time: orderTime
+                    })
                 });
+                const result = await response.json();
 
-                // Tăng số lượng sau khi đã gửi đơn đi
-                orders[prodId] = currentCount + 1;
-                localStorage.setItem('orders_xuonggiaymo_2026', JSON.stringify(orders));
+                if (result.counts) serverCounts = result.counts;
+
+                if (result.soldOut) {
+                    alert('Rất tiếc, mẫu thiệp này vừa hết 6 suất cuối cùng!');
+                    closeModal();
+                    renderProducts();
+                    return;
+                }
+                if (!result.success) throw new Error(result.error || "Server báo lỗi");
 
                 alert(`🎉 Đặt hàng thành công!\n\nCảm ơn bạn ${name}, đơn hàng đã được gửi tới Xưởng Giấy Mơ. Tụi mình sẽ sớm liên hệ qua Zalo (${phone}) để xác nhận nhé!`);
                 closeModal();
                 renderProducts();
             } catch (error) {
-                console.error("Lỗi gửi mail:", error);
+                console.error("Lỗi gửi đơn:", error);
 
-                // Phương án dự phòng: mở ứng dụng email của khách với nội dung đơn đã điền sẵn
+                // Phương án dự phòng: mở app email của khách với nội dung đơn điền sẵn
                 const useMail = confirm(
-                    "Chưa gửi được đơn tự động (mạng chập chờn hoặc hệ thống gửi thư gặp sự cố).\n\n" +
+                    "Chưa gửi được đơn tự động (mạng chập chờn hoặc hệ thống gặp sự cố).\n\n" +
                     "Bấm OK để gửi đơn qua ứng dụng email của bạn, hoặc Hủy rồi nhắn trực tiếp qua Zalo nhé!"
                 );
                 if (useMail) {
@@ -908,14 +907,7 @@
             }
         };
 
-        // Nút đặt lại 0 đơn để kiểm tra code
-        function resetDemoOrders() {
-            localStorage.setItem('orders_xuonggiaymo_2026', JSON.stringify({ 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }));
-            renderProducts();
-            alert('Đã khôi phục lại 0 đơn cho tất cả các mẫu thiệp!');
-        }
-
-        document.addEventListener('DOMContentLoaded', renderProducts);
+        document.addEventListener('DOMContentLoaded', () => { renderProducts(); loadCounts(); });
     </script>
 </body>
 </html>
