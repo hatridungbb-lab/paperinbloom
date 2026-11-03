@@ -840,13 +840,14 @@
 
             const submitBtn = document.getElementById('btnSubmitForm');
             const originalBtnHtml = submitBtn.innerHTML;
-
-            // Khóa nút để tránh khách nhấn liên tục
             submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi về Gmail...`;
+            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi đơn...`;
+
+            const orderTime = new Date().toLocaleString("vi-VN");
+            const noteText = note || "(Khách tự viết, không yêu cầu)";
 
             try {
-                // Gửi dữ liệu tự động tới hatridung.bb@gmail.com qua cổng API FormSubmit
+                // Gửi đơn tới hatridung.bb@gmail.com qua FormSubmit
                 const response = await fetch(`https://formsubmit.co/ajax/${DEST_EMAIL}`, {
                     method: "POST",
                     headers: {
@@ -854,36 +855,48 @@
                         "Accept": "application/json"
                     },
                     body: JSON.stringify({
-                        _captcha: "false", // Tắt captcha để gửi ngầm thành công 100%
-                        _subject: `💌 [ĐƠN HÀNG THIỆP MỚI] - ${name} (${p.name})`,
+                        _captcha: "false",
                         _template: "table",
+                        _subject: `💌 [ĐƠN HÀNG THIỆP MỚI] - ${name} (${p.name})`,
                         "Mẫu thiệp đã chọn": `Mẫu ${p.id}: ${p.name}`,
                         "Đơn giá": p.price,
                         "Họ và tên khách": name,
                         "Số điện thoại / Zalo": phone,
-                        "Lời chúc viết tay": note || "(Khách tự viết, không yêu cầu)",
-                        "Thời gian đặt hàng": new Date().toLocaleString("vi-VN")
+                        "Lời chúc viết tay": noteText,
+                        "Thời gian đặt hàng": orderTime
                     })
                 });
 
                 const result = await response.json();
+                const ok = response.ok && (result.success === "true" || result.success === true);
+                if (!ok) throw new Error(result.message || "FormSubmit trả về lỗi");
 
-                if (response.ok && (result.success === "true" || result.success === true)) {
-                    // Cập nhật số lượng và lưu vào LocalStorage
-                    currentCount += 1;
-                    orders[prodId] = currentCount;
-                    localStorage.setItem('orders_xuonggiaymo_2026', JSON.stringify(orders));
+                // Chỉ tăng số lượng khi email đã gửi thành công
+                orders[prodId] = currentCount + 1;
+                localStorage.setItem('orders_xuonggiaymo_2026', JSON.stringify(orders));
 
-                    alert(`🎉 Đặt hàng thành công!\n\nCảm ơn bạn ${name}, thông tin đơn đã được chuyển thẳng tới Gmail của Xưởng Giấy Mơ. Tụi mình sẽ sớm liên hệ qua Zalo (${phone}) để xác nhận nhé!`);
-                    
-                    closeModal();
-                    renderProducts();
-                } else {
-                    throw new Error("Lỗi phản hồi từ server gửi thư.");
-                }
+                alert(`🎉 Đặt hàng thành công!\n\nCảm ơn bạn ${name}, đơn hàng đã được gửi tới Xưởng Giấy Mơ. Tụi mình sẽ sớm liên hệ qua Zalo (${phone}) để xác nhận nhé!`);
+                closeModal();
+                renderProducts();
             } catch (error) {
                 console.error("Lỗi gửi mail:", error);
-                alert("Đơn hàng của bạn đã được ghi nhận. Nếu đường truyền mạng chập chờn, bạn cũng có thể nhắn tin trực tiếp qua Zalo để xưởng phục vụ nhanh nhất nhé!");
+
+                // Phương án dự phòng: mở ứng dụng email của khách với nội dung đơn đã điền sẵn
+                const useMail = confirm(
+                    "Chưa gửi được đơn tự động (mạng chập chờn hoặc hệ thống gửi thư gặp sự cố).\n\n" +
+                    "Bấm OK để gửi đơn qua ứng dụng email của bạn, hoặc Hủy rồi nhắn trực tiếp qua Zalo nhé!"
+                );
+                if (useMail) {
+                    const body =
+                        `Mẫu thiệp: Mẫu ${p.id} - ${p.name}\n` +
+                        `Đơn giá: ${p.price}\n` +
+                        `Họ và tên: ${name}\n` +
+                        `SĐT / Zalo: ${phone}\n` +
+                        `Lời chúc viết tay: ${noteText}\n` +
+                        `Thời gian: ${orderTime}`;
+                    window.location.href =
+                        `mailto:${DEST_EMAIL}?subject=${encodeURIComponent(`[ĐƠN HÀNG THIỆP MỚI] ${name} - ${p.name}`)}&body=${encodeURIComponent(body)}`;
+                }
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnHtml;
